@@ -11,4 +11,4 @@ def test_retornar_OK_root():
     response = client.get('/')  # Act (ação)
 
     assert response.status_code == HTTPStatus.OK  # assert (afirmação)
-    assert response.json() == {'message':'Batatas voadora atingiu uma torre'}
+    assert response.json() == {'message': 'Batatas voadora atingiu uma torre'}
