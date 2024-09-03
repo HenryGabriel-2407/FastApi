@@ -1,20 +1,19 @@
 [tool.poetry]
-name = "fast-one"
+name = "fast-three"
 version = "0.1.0"
 description = ""
 authors = ["Henry Gabriel <63942305+HenryGabriel-2407@users.noreply.github.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "3.12.*"
-fastapi = {extras = ["standard"], version = "^0.112.0"}
-ruff = "^0.5.6"
-pytest = "^8.3.2"
+python = "^3.11"
+fastapi = "^0.112.2"
 taskipy = "^1.13.0"
+ruff = "^0.6.3"
+sqlalchemy = "^2.0.33"
+pytest = "^8.3.2"
 pydantic = "^2.8.2"
 
-[tool.poetry.group.dev.dependencies]
-coverage = "^7.6.1"
 
 [tool.ruff]
 line-length = 99
@@ -35,6 +34,7 @@ run = 'fastapi dev fast_one/app.py'
 pre_test = 'task lint'
 test = 'pytest -cov=fast_one -vv'
 post_test = 'coverage html'
+
 
 [build-system]
 requires = ["poetry-core"]

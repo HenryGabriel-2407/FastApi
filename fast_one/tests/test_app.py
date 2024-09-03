@@ -30,3 +30,29 @@ def test_create_user(client):
     assert response.json() == {'id': 1,
                                 'nome': 'testusername',
                                 'email': 'test@email.com'}
+
+
+def test_read_user(client):
+    response = client.get('/users/')
+    assert response.status_code == HTTPStatus.OK
+    assert response.json() == {'users': [
+        {'id': 1,
+        'nome': 'testusername',
+        'email': 'test@email.com'}
+    ]}
+
+
+def test_put_user(client):
+    response = client.put('/users/1',
+                          json={'nome': 'testusername',
+                                'email': 'test@email.com',
+                                'senha': 'pass123',
+                                'id': 1})
+    assert response.json() == {'nome': 'testusername',
+                                'email': 'test@email.com',
+                                'id': 1}
+
+
+def test_delete_user(client):
+    response = client.delete('/users/1')
+    assert response.json() == {'message': 'User deleted'}

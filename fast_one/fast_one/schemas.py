@@ -19,3 +19,7 @@ class UserPublic(BaseModel):  # após inserir dados, o FastApi retornará isso
     id: int
     nome: str
     email: EmailStr
+
+
+class UserList(BaseModel):
+    users: list[UserPublic]
