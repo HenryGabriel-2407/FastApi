@@ -1,0 +1,9 @@
+FastAPI é um framework para desenvolvimento de aplicações web, mais especificamente para o desenvolvimento de APIs web.
+
+aplicações web, estamos falando de aplicações que funcionam em rede. Essa rede pode ser privativa, como a sua rede doméstica ou uma rede empresarial, ou podemos estar nos referindo à World Wide Web (WWW), comumente conhecida como "internet". A internet, que tem uma longa história iniciada na década de 1960, possui diversos padrões definidos e vem se aperfeiçoando desde então. Compreender completamente sua complexidade é um desafio, especialmente 6 décadas após seu início.
+
+Quando falamos em comunicação em rede, geralmente nos referimos à comunicação entre dois ou mais dispositivos interconectados. A ideia é que possamos nos comunicar com outros dispositivos usando a rede.
+
+URL: Localizador Uniforme de Recursos. Um endereço de rede pelo qual podemos nos comunicar com um computador na rede.
+HTTP: um protocolo que especifica como deve ocorrer a comunicação entre dispositivos.
+HTML: a linguagem usada para criar e estruturar páginas na web.

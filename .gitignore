@@ -161,3 +161,4 @@ cython_debug/
 
 .ruff_cache
 slides e anotações/
+fast_three\database.db

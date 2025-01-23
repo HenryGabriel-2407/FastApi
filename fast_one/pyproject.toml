@@ -1,0 +1,46 @@
+[tool.poetry]
+name = "fast-one"
+version = "0.1.0"
+description = ""
+authors = ["Henry Gabriel <63942305+HenryGabriel-2407@users.noreply.github.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "3.12.*"
+ruff = "^0.8.1"
+taskipy = "^1.14.1"
+pytest = "^8.3.3"
+fastapi = {extras = ["standard"], version = "^0.115.5"}
+pytest-cov = "^6.0.0"
+pydantic = "^2.10.2"
+
+[tool.ruff]
+line-length = 120
+extend-exclude = ['migrations']
+
+[tool.ruff.lint]
+preview = true
+select = ['I', 'F', 'E', 'W', 'PL', 'PT']
+
+[tool.ruff.format]
+preview = true
+quote-style = 'single'
+
+[tool.pytest.ini_options]
+pythonpath = "."
+addopts = '-p no:warnings'
+
+[tool.poetry.group.dev.dependencies]
+ruff = "^0.8.1"
+
+[tool.taskipy.tasks]
+run = 'fastapi dev fast_one/app.py'
+test = 'pytest -s -x --cov=fast_one -vv'
+post_test = 'coverage html'
+lint = 'ruff check . && ruff check . --diff'
+format = 'ruff check . --fix && ruff format .'
+pre_test = 'task lint'
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
