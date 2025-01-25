@@ -2,8 +2,8 @@ from http import HTTPStatus
 
 from fastapi import FastAPI
 
-from fast_five.routers import auth, users
 from fast_five.schemas import Message
+from routers import auth, users
 
 app = FastAPI()
 

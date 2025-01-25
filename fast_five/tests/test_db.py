@@ -1,7 +1,8 @@
 import pytest
-from fast_four.models import User, table_registry
 from sqlalchemy import create_engine, select
 from sqlalchemy.orm import Session
+
+from fast_five.models import User, table_registry
 
 
 @pytest.fixture
