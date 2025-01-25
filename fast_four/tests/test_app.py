@@ -9,6 +9,8 @@ from sqlalchemy.pool import StaticPool
 from fast_four.app import app
 from fast_four.database import get_session
 from fast_four.models import User, table_registry
+from fast_four.schemas import UserPublic
+from fast_four.security import get_password_hash
 
 
 @pytest.fixture
@@ -37,12 +39,28 @@ def session():
 
 @pytest.fixture
 def user(session):
-    user = User(username='Teste', email='teste@test.com', password='testtest')
+    password = 'testtest'
+    user = User(
+        username='Teste',
+        email='teste@test.com',
+        password=get_password_hash(password),
+    )
     session.add(user)
     session.commit()
     session.refresh(user)
 
+    user.clean_password = password
+
     return user
+
+
+@pytest.fixture
+def token(client, user):
+    response = client.post(
+        '/token',
+        data={'username': user.email, 'password': user.clean_password},
+    )
+    return response.json()['access_token']
 
 
 def test_get(client):
@@ -60,35 +78,48 @@ def test_create_user(client):
 
 
 def test_read_users_with_users(client, user):
-    # user_schema = UserPublic.model_validate(user).model_dump()
-    response = client.get('/users/')
-    assert response.json() == {'users': []}
+    user_schema = UserPublic.model_validate(user).model_dump()
+    response = client.get('/users/?limit=10&offset=0')
+    assert response.status_code == HTTPStatus.OK
+    assert response.json() == {'users': [user_schema]}
 
 
-def test_update_user(client):
+def test_update_user(client, user, token):
     response = client.put(
-        '/users/1', json={'username': 'testusername2', 'email': 'testemail2@example.com', 'password': 'testpassword2'}
+        f'/users/{user.id}',
+        json={'username': user.username, 'email': user.email, 'password': user.clean_password},
+        headers={'Authorization': f'Bearer {token}'},
     )
-    assert response.json() == {'detail': 'Usuário não existe'}
+    assert response.status_code == HTTPStatus.OK
 
 
 def test_get_user(client, user):
-    response = client.get('/users/1')
+    response = client.get(f'/users/{user.id}')
     assert response.status_code == HTTPStatus.OK
-    assert response.json() == {'email': 'teste@test.com', 'id': 1, 'username': 'Teste'}
+    assert response.json() == {'id': user.id, 'username': user.username, 'email': user.email}
 
 
-def test_update_user_not_found(client):
-    ...
-    # response = client.put('/users/2', json={'detail': 'Usuário não existe'})
-    # assert response.status_code == HTTPStatus.NOT_FOUND
+def test_update_user_unauthorized(client, user, token):
+    response = client.put(
+        f'/users/{user.id + 1}',
+        json={'username': user.username, 'email': user.email, 'password': user.clean_password},
+        headers={'Authorization': f'Bearer {token}'},
+    )
+    assert response.status_code == HTTPStatus.FORBIDDEN
 
 
-def test_delete_user(client):
-    response = client.delete('/users/1')
-    assert response.json() == {'detail': 'Usuário não existe'}
+def test_delete_user(client, user, token):
+    response = client.delete(
+        f'/users/{user.id}',
+        headers={'Authorization': f'Bearer {token}'},
+    )
+    assert response.status_code == HTTPStatus.OK
+    assert response.json() == {'message': 'User deleted'}
 
 
-def test_delete_user_not_found(client):
-    response = client.delete('/users/2')
-    assert response.status_code == HTTPStatus.NOT_FOUND
+def test_delete_user_unauthorized(client, user):
+    response = client.delete(
+        f'/users/{user.id + 1}',
+        headers={'Authorization': f'Bearer {token}'},
+    )
+    assert response.status_code == HTTPStatus.UNAUTHORIZED

@@ -10,8 +10,8 @@ from pwdlib import PasswordHash
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from fast_four.database import get_session
-from fast_four.models import User
+from fast_five.database import get_session
+from fast_five.models import User
 
 SECRET_KEY = 'your-secret-key'
 ALGORITHM = 'HS256'
