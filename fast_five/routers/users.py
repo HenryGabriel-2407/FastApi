@@ -55,6 +55,7 @@ def update_user(user_id: int, user: UserSchema, session: T_Session, current_user
         return current_user
 
     except IntegrityError:
+        session.rollback()
         raise HTTPException(
             status_code=HTTPStatus.CONFLICT,
             detail='Username or Email already exists',

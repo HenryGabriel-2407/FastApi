@@ -33,10 +33,10 @@ def test_get_user(client, user):
     assert response.json() == {'id': user.id, 'username': user.username, 'email': user.email}
 
 
-def test_update_user_unauthorized(client, user, token):
+def test_update_user_unauthorized(client, other_user, token):
     response = client.put(
-        f'/users/{user.id + 1}',
-        json={'username': user.username, 'email': user.email, 'password': user.clean_password},
+        f'/users/{other_user.id}',
+        json={'username': 'bob', 'email': 'bob@example.com', 'password': 'mynewpassword'},
         headers={'Authorization': f'Bearer {token}'},
     )
     assert response.status_code == HTTPStatus.FORBIDDEN
@@ -51,9 +51,24 @@ def test_delete_user(client, user, token):
     assert response.json() == {'message': 'User deleted'}
 
 
-def test_delete_user_unauthorized(client, user, token):
+def test_delete_user_unauthorized(client, other_user, token):
     response = client.delete(
-        f'/users/{user.id + 1}',
+        f'/users/{other_user.id}',
         headers={'Authorization': f'Bearer {token}'},
     )
     assert response.status_code == HTTPStatus.FORBIDDEN
+
+
+def test_update_integrity_error(client, user, other_user, token):
+    response_update = client.put(
+        f'/users/{user.id}',
+        headers={'Authorization': f'Bearer {token}'},
+        json={
+            'username': other_user.username,
+            'email': 'bob@example.com',
+            'password': 'mynewpassword',
+        },
+    )
+
+    assert response_update.status_code == HTTPStatus.CONFLICT
+    assert response_update.json() == {'detail': 'Username or Email already exists'}
