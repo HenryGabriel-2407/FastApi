@@ -1,0 +1,58 @@
+[tool.poetry]
+name = "fast-six"
+version = "0.1.0"
+description = ""
+authors = ["Henry Gabriel <63942305+HenryGabriel-2407@users.noreply.github.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+pydantic-settings = "^2.7.1"
+ruff = "^0.9.4"
+taskipy = "^1.14.1"
+pytest = "^8.3.4"
+fastapi = {extras = ["standard"], version = "^0.115.8"}
+pydantic = "^2.10.6"
+sqlalchemy = "^2.0.37"
+httpx = "^0.28.1"
+alembic = "^1.14.1"
+pwdlib = {extras = ["argon2"], version = "^0.2.1"}
+python-multipart = "^0.0.20"
+tzdata = "^2025.1"
+pyjwt = "^2.10.1"
+pytest-cov = "^6.0.0"
+
+
+[tool.poetry.group.dev.dependencies]
+factory-boy = "^3.3.1"
+freezegun = "^1.5.1"
+
+[tool.ruff]
+line-length = 120
+extend-exclude = ['migrations']
+
+[tool.ruff.lint]
+preview = true
+select = ['I', 'F', 'E', 'W', 'PL', 'PT']
+ignore = ["PLR0913", "PLR0917"]
+
+[tool.ruff.format]
+preview = true
+quote-style = 'single'
+
+[tool.pytest.ini_options]
+pythonpath = "."
+addopts = '-p no:warnings'
+
+[tool.taskipy.tasks]
+run = 'fastapi dev fast_six/app.py'
+test = 'pytest -s --cov=fast_six -vv'
+post_test = 'coverage html'
+lint = 'ruff check . && ruff check . --diff'
+format = 'ruff check . --fix && ruff format .'
+pre_test = 'task lint'
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
