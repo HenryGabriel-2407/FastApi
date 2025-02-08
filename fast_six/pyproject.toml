@@ -21,6 +21,7 @@ python-multipart = "^0.0.20"
 tzdata = "^2025.1"
 pyjwt = "^2.10.1"
 pytest-cov = "^6.0.0"
+mysql-connector-python = "^9.2.0"
 
 
 [tool.poetry.group.dev.dependencies]

@@ -7,6 +7,8 @@ from alembic import context
 from fast_six.models import table_registry
 from fast_six.settings import Settings
 
+# this is the Alembic Config object, which provides
+# access to the values within the .ini file in use.
 config = context.config
 config.set_main_option('sqlalchemy.url', Settings().DATABASE_URL)
 
