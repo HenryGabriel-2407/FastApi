@@ -4,7 +4,7 @@ import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
-from sqlalchemy.pool import StaticPool
+from testcontainers.mysql import MySqlContainer
 
 from fast_six.app import app
 from fast_six.database import get_session
@@ -33,11 +33,13 @@ class TodoFactory(factory.Factory):
 
 @pytest.fixture(scope='session')
 def engine():
-    with PostgresContainer('postgres:16', driver='psycopg') as postgres:
-        _engine = create_engine(postgres.get_connection_url())
+    with MySqlContainer('mysql:8.0'):
+        connection_url = 'mysql+mysqlconnector://app_user:app_password@localhost:3307/app_db'
+        _engine = create_engine(connection_url)
 
         with _engine.begin():
             yield _engine
+
 
 @pytest.fixture
 def session(engine):
@@ -48,6 +50,7 @@ def session(engine):
         session.rollback()
 
     table_registry.metadata.drop_all(engine)
+
 
 @pytest.fixture
 def client(session):
