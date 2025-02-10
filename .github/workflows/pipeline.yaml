@@ -27,6 +27,19 @@ jobs:
         run: |
           cd fast_six
           poetry install
+
+      - name: Subir banco MySQL para testes
+        run: |
+          docker run \
+            --name app_database \
+            -e MYSQL_ROOT_PASSWORD=root_password \
+            -e MYSQL_USER=app_user \
+            -e MYSQL_PASSWORD=app_password \
+            -e MYSQL_DATABASE=app_db \
+            -p 3307:3306 \
+            -d mysql:8.0
+
+
       - name: Testes
         run: |
           cd fast_six
