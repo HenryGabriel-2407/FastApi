@@ -23,9 +23,14 @@ jobs:
       - name: Instalar o poetry
         run: pip install poetry
 
-      - name: Instalando as dependências
+      - name: Instalar dependências e rodar testes em cada projeto
         run: |
-          cd fast_six
-          poetry install
-      - name: Testes
-        run: poetry run task test
+          for dir in fast_*; do
+            if [ -f "$dir/pyproject.toml" ]; then
+              echo "Rodando testes em $dir..."
+              cd "$dir"
+              poetry install
+              poetry run task test || exit 1
+              cd ..
+            fi
+          done
