@@ -8,9 +8,14 @@ jobs:
     steps:
       - name: Copiar os arquivos
         uses: actions/checkout@v3
+
       - name: Instalar o python
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+
       - name: Instalar o poetry
         run: pip install poetry
+
+      - name: Instalando as dependências
+        run: poetry install
