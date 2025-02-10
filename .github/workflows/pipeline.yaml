@@ -19,5 +19,5 @@ jobs:
 
       - name: Instalando as dependências
         run: |
-          cd fast_six\pyproject.toml
+          cd fast_six
           poetry install
